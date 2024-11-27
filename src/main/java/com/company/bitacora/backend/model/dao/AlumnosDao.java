@@ -1,4 +1,7 @@
 package com.company.bitacora.backend.model.dao;
 
-public interface Alumnos {
+import com.company.bitacora.backend.model.Alumnos;
+import org.springframework.data.repository.CrudRepository;
+
+public interface AlumnosDao extends CrudRepository<Alumnos, Long> {
 }

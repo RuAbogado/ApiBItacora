@@ -1,2 +1,7 @@
-package com.company.bitacora.backend.model.dao;public interface SalonDao {
+package com.company.bitacora.backend.model.dao;
+
+import com.company.bitacora.backend.model.Salon;
+import org.springframework.data.repository.CrudRepository;
+
+public interface SalonDao extends CrudRepository<Salon, Integer> {
 }
