@@ -20,7 +20,7 @@ public class Bitacora implements Serializable {
     private String grado;
     private String grupo;
     @Lob
-    private String foto;
+    private byte[] foto;
     private String descripcion;
 
     // Getters y Setters
@@ -84,7 +84,7 @@ public class Bitacora implements Serializable {
         return foto;
     }
 
-    public void setFoto(String foto) {
+    public void setFoto(byte[] foto) {
         this.foto = foto;
     }
 
@@ -95,4 +95,5 @@ public class Bitacora implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
 }

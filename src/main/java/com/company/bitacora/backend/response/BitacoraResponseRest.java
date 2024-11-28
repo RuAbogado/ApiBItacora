@@ -1,16 +1,15 @@
 package com.company.bitacora.backend.response;
 
 public class BitacoraResponseRest extends BitacoraResponse {
-    private String additionalInfo;
+    private BitacoraResponse bitacoraResponse= new BitacoraResponse();
 
-    public String getAdditionalInfo() {
-        return additionalInfo;
+    public BitacoraResponse getBitacoraResponse() {
+        return bitacoraResponse;
+    }
+    public void setBitacoraResponse(BitacoraResponse bitacoraResponse) {
+        this.bitacoraResponse = bitacoraResponse;
     }
 
-    public void setAdditionalInfo(String additionalInfo) {
-        this.additionalInfo = additionalInfo;
-    }
-
-    public void setMetadata(String respuestaOk, String number, String eliminaciónExitosa) {
+    public void setMetadata(String respuestaNoActualizada, String s, String categoriaNoActualizada) {
     }
 }

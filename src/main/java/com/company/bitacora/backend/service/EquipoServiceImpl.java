@@ -22,11 +22,8 @@ public class EquipoServiceImpl implements EquipoService {
 
     @Override
     public Equipo getEquipoById(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("El ID no puede ser nulo");
-        }
-        return equipoDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Equipo no encontrado con el ID: " + id));
+        Optional<Equipo> equipo = equipoDao.findById(id);
+        return equipo.orElseThrow(() -> new RuntimeException("Equipo no encontrado"));
     }
 
 

@@ -2,7 +2,6 @@ package com.company.bitacora.backend.controller;
 
 
 import com.company.bitacora.backend.model.Alumnos;
-import com.company.bitacora.backend.model.Book;
 import com.company.bitacora.backend.service.AlumnosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

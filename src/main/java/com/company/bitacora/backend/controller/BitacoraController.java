@@ -6,6 +6,7 @@ import com.company.bitacora.backend.service.BitacoraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/bitacoras")
@@ -34,7 +35,11 @@ public class BitacoraController {
         return bitacoraService.actualizarBitacora(bitacora, id);
     }
 
-    @PatchMapping("/bitacora/{}")
+    @PatchMapping("/categorias/{id}")
+    public ResponseEntity<BitacoraResponseRest> upImg(@RequestParam("file") MultipartFile img, @PathVariable Long id) {
+        ResponseEntity<BitacoraResponseRest> response = bitacoraService.upImagen(img, id);
+        return response;
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BitacoraResponseRest> eliminar(@PathVariable Long id) {
