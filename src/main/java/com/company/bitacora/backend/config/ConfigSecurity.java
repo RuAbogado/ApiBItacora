@@ -44,7 +44,7 @@ public class ConfigSecurity {
                         .requestMatchers(HttpMethod.POST, "/v1/bitacoras").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/v1/bitacoras/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/v1/bitacoras/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/equipos").hasAnyRole("Admin", "Empleado")
+                        .requestMatchers(HttpMethod.GET, "/v1/equipos").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/equipos").hasRole("Admin")
                         .requestMatchers(HttpMethod.PUT, "/v1/equipos/**").hasRole("Admin")
                         .requestMatchers(HttpMethod.DELETE, "/v1/equipos/**").hasRole("Admin")
