@@ -25,6 +25,7 @@ import java.util.List;
 public class ConfigSecurity {
 
     @Autowired
+
     @Lazy
     private JwtReqFilter jwtReqFilter;
 
