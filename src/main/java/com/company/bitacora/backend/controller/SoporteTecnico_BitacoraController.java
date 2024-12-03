@@ -10,37 +10,37 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("bitacora_tecnico")
+@RequestMapping("v1")
 public class SoporteTecnico_BitacoraController {
 
     @Autowired
     private SoporteTecnico_BitacoraService soporteTecnicoBitacoraService;
 
-    @GetMapping
+    @GetMapping("/bitacoras_tecnicos")
     public ResponseEntity<List<SoporteTecnico_Bitacora>> getAll() {
         List<SoporteTecnico_Bitacora> tecnicos = soporteTecnicoBitacoraService.BitacorasTecnicos();
         return ResponseEntity.ok(tecnicos);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/bitacoras_tecnicos/{id}")
     public ResponseEntity<SoporteTecnico_Bitacora> getById(@PathVariable Long id) {
         SoporteTecnico_Bitacora tecnico_bitacora = soporteTecnicoBitacoraService.BuscarBitacora(id);
         return ResponseEntity.ok(tecnico_bitacora);
     }
 
-    @PostMapping
+    @PostMapping("/bitacoras_tecnicos")
     public ResponseEntity<SoporteTecnico_Bitacora> createBitacoraTecnico(@RequestBody SoporteTecnico_Bitacora SoporteTecnico_Bitacora) {
         SoporteTecnico_Bitacora newBitacora_tecnico = soporteTecnicoBitacoraService.NuevaBitacora(SoporteTecnico_Bitacora);
         return ResponseEntity.ok(newBitacora_tecnico);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/bitacoras_tecnicos/{id}")
     public ResponseEntity<SoporteTecnico_Bitacora> updateBitacoraTecnico(@PathVariable Long id, @RequestBody SoporteTecnico_Bitacora SoporteTecnico_Bitacora) {
         SoporteTecnico_Bitacora updateBitacora_Tecnico = soporteTecnicoBitacoraService.actualizarBitacora(id, SoporteTecnico_Bitacora);
         return ResponseEntity.ok(updateBitacora_Tecnico);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/bitacoras_tecnicos/{id}")
     public ResponseEntity<Void> deleteBitacoraTecnico(@PathVariable Long id) {
         soporteTecnicoBitacoraService.eliminarBitacora(id);
         return ResponseEntity.noContent().build();

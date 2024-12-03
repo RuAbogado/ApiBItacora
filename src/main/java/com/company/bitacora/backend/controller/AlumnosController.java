@@ -10,36 +10,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("alumnos")
+@RequestMapping("/v1")
 public class AlumnosController {
     @Autowired
     private AlumnosService alumnosService;
 
-    @GetMapping
+    @GetMapping("/alumnos")
     public ResponseEntity<List<Alumnos>> getAllAlumnos() {
         List<Alumnos> alumnos = alumnosService.getAlumnos();
         return ResponseEntity.ok(alumnos);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/alumnos/{id}")
     public ResponseEntity<Alumnos> getAlumno(@PathVariable Long id) {
        Alumnos alumno = alumnosService.getAlumnoById(id);
         return ResponseEntity.ok(alumno);
     }
 
-    @PostMapping
+    @PostMapping("/alumnos")
     public ResponseEntity<Alumnos> createAlumno(@RequestBody Alumnos alumnos) {
         Alumnos newAlumnos = alumnosService.saveAlumno(alumnos);
         return ResponseEntity.ok(newAlumnos);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/alumnos/{id}")
     public ResponseEntity<Alumnos> updateAlumno(@PathVariable Long id, @RequestBody Alumnos alumnos) {
         Alumnos updatedAlumnos = alumnosService.updateAlumno(id, alumnos);
         return ResponseEntity.ok(updatedAlumnos);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/alumnos/{id}")
     public ResponseEntity<Alumnos> deleteAlumno(@PathVariable Long id) {
         alumnosService.deleteAlumno(id);
         return ResponseEntity.noContent().build();

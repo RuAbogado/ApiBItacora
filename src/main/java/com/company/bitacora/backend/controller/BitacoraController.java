@@ -9,39 +9,39 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/bitacoras")
+@RequestMapping("/v1")
 public class BitacoraController {
 
     @Autowired
     private BitacoraService bitacoraService;
 
-    @GetMapping
+    @GetMapping("/bitacoras")
     public ResponseEntity<BitacoraResponseRest> getBitacoras() {
         return bitacoraService.buscarBitacora();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/bitacoras/{id}")
     public ResponseEntity<BitacoraResponseRest> getBitacoraById(@PathVariable Long id) {
         return bitacoraService.buscarPorID(id);
     }
 
-    @PostMapping
+    @PostMapping("bitacoras")
     public ResponseEntity<BitacoraResponseRest> crear(@RequestBody Bitacora bitacora) {
         return bitacoraService.crearBitacora(bitacora);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/bitacoras/{id}")
     public ResponseEntity<BitacoraResponseRest> actualizar(@RequestBody Bitacora bitacora, @PathVariable Long id) {
         return bitacoraService.actualizarBitacora(bitacora, id);
     }
 
-    @PatchMapping("/categorias/{id}")
+    @PatchMapping("/bitacoras/{id}")
     public ResponseEntity<BitacoraResponseRest> upImg(@RequestParam("file") MultipartFile img, @PathVariable Long id) {
         ResponseEntity<BitacoraResponseRest> response = bitacoraService.upImagen(img, id);
         return response;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/bitacoras/{id}")
     public ResponseEntity<BitacoraResponseRest> eliminar(@PathVariable Long id) {
         return bitacoraService.eliminarBitacora(id);
     }

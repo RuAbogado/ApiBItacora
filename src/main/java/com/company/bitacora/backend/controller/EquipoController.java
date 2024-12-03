@@ -10,36 +10,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("equipo")
+@RequestMapping("v1")
 public class EquipoController {
     @Autowired
     private EquipoService equipoService;
 
-    @GetMapping
+    @GetMapping("/equipos")
     public ResponseEntity<List<Equipo>> listar() {
         List<Equipo> equipos = equipoService.getEquipos();
         return ResponseEntity.ok(equipos);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/equipos/{id}")
     public ResponseEntity<Equipo> buscar(@PathVariable Long id) {
         Equipo equipo = equipoService.getEquipoById(id);
         return ResponseEntity.ok(equipo);
     }
 
-    @PostMapping
+    @PostMapping("/equipos")
     public ResponseEntity<Equipo> crear(@RequestBody Equipo equipo) {
         Equipo saveEquipo = equipoService.saveEquipo( equipo);
         return ResponseEntity.ok(saveEquipo);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/equipos/{id}")
     public ResponseEntity<Equipo> update(@PathVariable Long id, @RequestBody Equipo equipo) {
         Equipo updateEquipo = equipoService.updateEquipo( id, equipo);
         return ResponseEntity.ok(updateEquipo);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/equipos/{id}")
     public ResponseEntity<Equipo> eliminar(@PathVariable Long id) {
         equipoService.deleteEquipo( id);
         return ResponseEntity.noContent().build();
