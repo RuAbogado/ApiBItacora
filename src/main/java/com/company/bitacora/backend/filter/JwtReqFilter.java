@@ -30,14 +30,6 @@ public class JwtReqFilter extends OncePerRequestFilter {  // Extiende OncePerReq
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        // Verifica si la ruta actual es la de autenticación (que no debe pasar por el filtro JWT)
-        String path = request.getRequestURI();
-        if (path.startsWith("/v1/authenticate")) {
-            // Si la ruta es /v1/authenticate, simplemente pasa al siguiente filtro
-            chain.doFilter(request, response);
-            return;
-        }
-
         // Obtiene el encabezado 'Authorization' de la solicitud HTTP
         final String authorizationHeader = request.getHeader("Authorization");
 
@@ -72,5 +64,4 @@ public class JwtReqFilter extends OncePerRequestFilter {  // Extiende OncePerReq
         // Pasa la solicitud y la respuesta al siguiente filtro en la cadena de filtros
         chain.doFilter(request, response);
     }
-
 }

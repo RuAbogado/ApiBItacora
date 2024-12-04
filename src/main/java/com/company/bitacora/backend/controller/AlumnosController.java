@@ -2,12 +2,8 @@ package com.company.bitacora.backend.controller;
 
 import com.company.bitacora.backend.model.Alumnos;
 import com.company.bitacora.backend.service.AlumnosService;
-import com.company.bitacora.backend.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,46 +43,17 @@ public class AlumnosController {
         }
     }
 
-    @Autowired
-    private JwtService jwtService;
     @PostMapping("/alumnos")
     public ResponseEntity<?> createAlumno(@RequestBody Alumnos alumnos) {
-        try {
-            // 1. Cifrar la contraseña antes de guardarla
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String encryptedPassword = passwordEncoder.encode(alumnos.getContrasena());
-
-            // 2. Crear un nuevo objeto alumno con la contraseña cifrada
-            alumnos.setContrasena(encryptedPassword);
-
-            // 3. Guardar el alumno en la base de datos
-            Alumnos newAlumnos = alumnosService.saveAlumno(alumnos);
-
-            // 4. Crear un UserDetails para Spring Security, usando el correo y contraseña cifrada
-            UserDetails newUser = User.builder()
-                    .username(alumnos.getCorreo())  // Correo como nombre de usuario
-                    .password(encryptedPassword)
-                    .roles("Alumno")  // El rol de "Alumno"
-                    .build();
-
-            // 5. Generar el token JWT con los detalles del usuario
-            final String jwt = jwtService.generateToken(newUser);
-
-            // 6. Retornar el token en la respuesta
-            return ResponseEntity
-                    .status(201)  // Código HTTP 201 (Created)
-                    .body(Map.of(
-                            "message", "Alumno registrado con éxito",
-                            "data", newAlumnos,
-                            "codigo", 201,
-                            "token", jwt  // Incluir el token en la respuesta
-                    ));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(Map.of("message", "Error al registrar alumno"));
-        }
+        Alumnos newAlumnos = alumnosService.saveAlumno(alumnos);
+        return ResponseEntity
+                .status(201) // Código HTTP 201 (Created)
+                .body(Map.of(
+                        "message", "Alumno registrado con éxito",
+                        "data", newAlumnos,
+                        "codigo", 201
+                ));
     }
-
-
 
     @PutMapping("/alumnos/{id}")
     public ResponseEntity<?> updateAlumno(@PathVariable Long id, @RequestBody Alumnos alumnos) {
