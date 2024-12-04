@@ -42,7 +42,6 @@ public class ConfigSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configure -> configure
                         // Se configuran las reglas de autorización para las rutas según el método HTTP (GET, POST, PUT, DELETE)
-                        .requestMatchers(HttpMethod.GET, "/v1/alumnos").permitAll() // Solo Admin y Alumno pueden acceder
                         .requestMatchers(HttpMethod.POST, "/v1/alumnos").permitAll() // Solo Admin y Alumno pueden acceder
                         .requestMatchers(HttpMethod.PUT, "/v1/alumnos/**").permitAll() // Solo Admin y Alumno pueden acceder
                         .requestMatchers(HttpMethod.DELETE, "/v1/alumnos/**").permitAll()// Solo Admin puede eliminar
