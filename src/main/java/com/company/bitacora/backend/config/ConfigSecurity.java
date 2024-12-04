@@ -48,7 +48,7 @@ public class ConfigSecurity {
                         .requestMatchers(HttpMethod.DELETE, "/v1/alumnos/**").permitAll()// Solo Admin puede eliminar
                         .requestMatchers(HttpMethod.GET, "/v1/bitacoras").permitAll() // Admin y Empleado pueden acceder
                         .requestMatchers(HttpMethod.POST, "/v1/bitacoras").permitAll()// Solo Alumno puede crear
-                        .requestMatchers(HttpMethod.PUT, "/v1/bitacoras/**").permitAll() // Solo Empleado puede modificar
+                        .requestMatchers(HttpMethod.PUT, "/v1/bitacoras/**").permitAll()// Solo Empleado puede modificar
                         .requestMatchers(HttpMethod.DELETE, "/v1/bitacoras/**").permitAll() // Empleado y Admin pueden eliminar
                         .requestMatchers(HttpMethod.GET, "/v1/equipos").hasRole("Admin") // Admin y Empleado pueden acceder
                         .requestMatchers(HttpMethod.POST, "/v1/equipos").hasRole("Admin") // Solo Admin puede crear
