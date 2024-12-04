@@ -41,27 +41,34 @@ public class ConfigSecurity {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configure -> configure
-                        // Se configuran las reglas de autorización para las rutas según el método HTTP (GET, POST, PUT, DELETE)
-                        .requestMatchers(HttpMethod.POST, "/v1/alumnos").permitAll() // Solo Admin y Alumno pueden acceder
-                        .requestMatchers(HttpMethod.PUT, "/v1/alumnos/**").permitAll() // Solo Admin y Alumno pueden acceder
-                        .requestMatchers(HttpMethod.DELETE, "/v1/alumnos/**").permitAll()// Solo Admin puede eliminar
-                        .requestMatchers(HttpMethod.GET, "/v1/bitacoras").permitAll() // Admin y Empleado pueden acceder
-                        .requestMatchers(HttpMethod.POST, "/v1/bitacoras").permitAll()// Solo Alumno puede crear
-                        .requestMatchers(HttpMethod.PUT, "/v1/bitacoras/**").permitAll()// Solo Empleado puede modificar
-                        .requestMatchers(HttpMethod.DELETE, "/v1/bitacoras/**").permitAll() // Empleado y Admin pueden eliminar
-                        .requestMatchers(HttpMethod.GET, "/v1/equipos").hasRole("Admin") // Admin y Empleado pueden acceder
-                        .requestMatchers(HttpMethod.POST, "/v1/equipos").hasRole("Admin") // Solo Admin puede crear
-                        .requestMatchers(HttpMethod.PUT, "/v1/equipos/**").hasRole("Admin") // Solo Admin puede modificar
-                        .requestMatchers(HttpMethod.DELETE, "/v1/equipos/**").hasRole("Admin") // Solo Admin puede eliminar
-                        .requestMatchers(HttpMethod.GET, "/v1/salones").hasRole("Admin") // Admin y Empleado pueden acceder
-                        .requestMatchers(HttpMethod.POST, "/v1/salones").hasRole("Admin") // Solo Admin puede crear
-                        .requestMatchers(HttpMethod.PUT, "/v1/salones/**").hasRole("Admin") // Solo Admin puede modificar
-                        .requestMatchers(HttpMethod.DELETE, "/v1/salones/**").hasRole("Admin") // Solo Admin puede eliminar
-                        .requestMatchers(HttpMethod.GET, "/v1/tecnicos").hasRole("Admin") // Solo Admin puede acceder
-                        .requestMatchers(HttpMethod.POST, "/v1/tecnicos").hasRole("Admin") // Solo Admin puede crear
-                        .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").hasRole("Admin") // Solo Admin puede modificar
-                        .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").hasRole("Admin") // Solo Admin puede eliminar
-                        .requestMatchers("/v1/authenticate").permitAll() // Ruta pública para la autenticación
+                                // Se configuran las reglas de autorización para las rutas según el método HTT
+                                .requestMatchers(HttpMethod.POST, "/v1/authenticate").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/v1/alumnos").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/v1/alumnos").permitAll() // Solo Admin y Alumno pueden acceder
+                                .requestMatchers(HttpMethod.PUT, "/v1/alumnos/**").permitAll()// Solo Admin y Alumno pueden acceder
+                                .requestMatchers(HttpMethod.GET, "/v1/alumnos/**").permitAll()
+                                .requestMatchers(HttpMethod.DELETE, "/v1/alumnos/**").permitAll()// Solo Admin puede eliminar
+                                .requestMatchers(HttpMethod.GET, "/v1/bitacoras").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/v1/bitacoras/**").permitAll()// Admin y Empleado pueden acceder
+                                .requestMatchers(HttpMethod.POST, "/v1/bitacoras").permitAll()// Solo Alumno puede crear
+                                .requestMatchers(HttpMethod.PUT, "/v1/bitacoras/**").permitAll()// Solo Empleado puede modificar
+                                .requestMatchers(HttpMethod.DELETE, "/v1/bitacoras/**").permitAll() // Empleado y Admin pueden eliminar
+                                .requestMatchers(HttpMethod.GET, "/v1/equipos").hasRole("Admin")
+                                .requestMatchers(HttpMethod.GET, "/v1/equipos/**").hasRole("Admin")// Admin y Empleado pueden acceder
+                                .requestMatchers(HttpMethod.POST, "/v1/equipos").hasRole("Admin") // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.PUT, "/v1/equipos/**").hasRole("Admin") // Solo Admin puede modificar
+                                .requestMatchers(HttpMethod.DELETE, "/v1/equipos/**").hasRole("Admin") // Solo Admin puede eliminar
+                                .requestMatchers(HttpMethod.GET, "/v1/salones").hasRole("Admin")
+                                .requestMatchers(HttpMethod.GET, "/v1/salones/**").hasRole("Admin") // Admin y Empleado pueden acceder
+                                .requestMatchers(HttpMethod.POST, "/v1/salones").hasRole("Admin") // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.PUT, "/v1/salones/**").hasRole("Admin") // Solo Admin puede modificar
+                                .requestMatchers(HttpMethod.DELETE, "/v1/salones/**").hasRole("Admin") // Solo Admin puede eliminar
+                                .requestMatchers(HttpMethod.GET, "/v1/tecnicos").hasRole("Admin")
+                                .requestMatchers(HttpMethod.GET, "/v1/tecnicos/**").hasRole("Admin")// Solo Admin puede acceder
+                                .requestMatchers(HttpMethod.POST, "/v1/tecnicos").hasRole("Admin") // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").hasRole("Admin") // Solo Admin puede modificar
+                                .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").hasRole("Admin") // Solo Admin puede eliminar
+                        // Ruta pública para la autenticación
                 )
                 // Configuración de CORS para permitir solicitudes desde un origen específico
                 .cors(cors -> cors.configurationSource(request -> {
