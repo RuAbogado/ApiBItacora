@@ -1,6 +1,5 @@
 package com.company.bitacora.backend.controller;
 
-
 import com.company.bitacora.backend.model.SoporteTecnico;
 import com.company.bitacora.backend.service.SoporteTecnicoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("v1")
@@ -17,32 +17,72 @@ public class SoporteTecnicoController {
     private SoporteTecnicoService soporteTecnicoService;
 
     @GetMapping("/tecnicos")
-    public ResponseEntity<List<SoporteTecnico>> getAll() {
+    public ResponseEntity<?> getAll() {
         List<SoporteTecnico> tecnicos = soporteTecnicoService.listarTecnicos();
-        return ResponseEntity.ok(tecnicos);
+        return ResponseEntity.ok(Map.of(
+                "message", "Técnicos obtenidos con éxito",
+                "data", tecnicos,
+                "codigo", 200
+        ));
     }
 
     @GetMapping("/tecnicos/{id}")
-    public ResponseEntity<SoporteTecnico> getById(@PathVariable Long id) {
+    public ResponseEntity<?> getById(@PathVariable Long id) {
         SoporteTecnico tecnico = soporteTecnicoService.getSoporteTecnico(id);
-        return ResponseEntity.ok(tecnico);
+        if (tecnico != null) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "Técnico encontrado con éxito",
+                    "data", tecnico,
+                    "codigo", 200
+            ));
+        } else {
+            return ResponseEntity.status(404).body(Map.of(
+                    "message", "Técnico no encontrado",
+                    "codigo", 404
+            ));
+        }
     }
 
     @PostMapping("/tecnicos")
-    public ResponseEntity<SoporteTecnico> create(@RequestBody SoporteTecnico soporteTecnico) {
+    public ResponseEntity<?> create(@RequestBody SoporteTecnico soporteTecnico) {
         SoporteTecnico newTecnico = soporteTecnicoService.saveSoporteTecnico(soporteTecnico);
-        return ResponseEntity.ok(newTecnico);
+        return ResponseEntity.status(201).body(Map.of(
+                "message", "Técnico creado con éxito",
+                "data", newTecnico,
+                "codigo", 201
+        ));
     }
 
     @PutMapping("/tecnicos/{id}")
-    public ResponseEntity<SoporteTecnico> updateTecnico(@PathVariable Long id, @RequestBody SoporteTecnico soporteTecnico) {
-        SoporteTecnico updateTecnico = soporteTecnicoService.updateSoporteTecnico(id,soporteTecnico );
-        return ResponseEntity.ok(updateTecnico);
+    public ResponseEntity<?> updateTecnico(@PathVariable Long id, @RequestBody SoporteTecnico soporteTecnico) {
+        SoporteTecnico updatedTecnico = soporteTecnicoService.updateSoporteTecnico(id, soporteTecnico);
+        if (updatedTecnico != null) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "Técnico actualizado con éxito",
+                    "data", updatedTecnico,
+                    "codigo", 200
+            ));
+        } else {
+            return ResponseEntity.status(404).body(Map.of(
+                    "message", "Técnico no encontrado",
+                    "codigo", 404
+            ));
+        }
     }
 
     @DeleteMapping("/tecnicos/{id}")
-    public ResponseEntity<SoporteTecnico> deleteTecnico(@PathVariable Long id) {
-        soporteTecnicoService.deleteSoporteTecnico(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteTecnico(@PathVariable Long id) {
+        boolean deleted = soporteTecnicoService.deleteSoporteTecnico(id);
+        if (deleted) {
+            return ResponseEntity.status(204).body(Map.of(
+                    "message", "Técnico eliminado con éxito",
+                    "codigo", 204
+            ));
+        } else {
+            return ResponseEntity.status(404).body(Map.of(
+                    "message", "Técnico no encontrado",
+                    "codigo", 404
+            ));
+        }
     }
 }

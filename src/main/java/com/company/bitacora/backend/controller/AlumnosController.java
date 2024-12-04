@@ -12,19 +12,35 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1")
 public class AlumnosController {
+
     @Autowired
     private AlumnosService alumnosService;
 
     @GetMapping("/alumnos")
-    public ResponseEntity<List<Alumnos>> getAllAlumnos() {
+    public ResponseEntity<?> getAllAlumnos() {
         List<Alumnos> alumnos = alumnosService.getAlumnos();
-        return ResponseEntity.ok(alumnos);
+        return ResponseEntity.ok(Map.of(
+                "message", "Alumnos obtenidos con éxito",
+                "data", alumnos,
+                "codigo", 200
+        ));
     }
 
     @GetMapping("/alumnos/{id}")
-    public ResponseEntity<Alumnos> getAlumno(@PathVariable Long id) {
+    public ResponseEntity<?> getAlumno(@PathVariable Long id) {
         Alumnos alumno = alumnosService.getAlumnoById(id);
-        return ResponseEntity.ok(alumno);
+        if (alumno != null) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "Alumno obtenido con éxito",
+                    "data", alumno,
+                    "codigo", 200
+            ));
+        } else {
+            return ResponseEntity.status(404).body(Map.of(
+                    "message", "Alumno no encontrado",
+                    "codigo", 404
+            ));
+        }
     }
 
     @PostMapping("/alumnos")
@@ -40,14 +56,35 @@ public class AlumnosController {
     }
 
     @PutMapping("/alumnos/{id}")
-    public ResponseEntity<Alumnos> updateAlumno(@PathVariable Long id, @RequestBody Alumnos alumnos) {
+    public ResponseEntity<?> updateAlumno(@PathVariable Long id, @RequestBody Alumnos alumnos) {
         Alumnos updatedAlumnos = alumnosService.updateAlumno(id, alumnos);
-        return ResponseEntity.ok(updatedAlumnos);
+        if (updatedAlumnos != null) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "Alumno actualizado con éxito",
+                    "data", updatedAlumnos,
+                    "codigo", 200
+            ));
+        } else {
+            return ResponseEntity.status(404).body(Map.of(
+                    "message", "Alumno no encontrado",
+                    "codigo", 404
+            ));
+        }
     }
 
     @DeleteMapping("/alumnos/{id}")
-    public ResponseEntity<Alumnos> deleteAlumno(@PathVariable Long id) {
-        alumnosService.deleteAlumno(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteAlumno(@PathVariable Long id) {
+        boolean deleted = alumnosService.deleteAlumno(id);
+        if (deleted) {
+            return ResponseEntity.status(204).body(Map.of(
+                    "message", "Alumno eliminado con éxito",
+                    "codigo", 204
+            ));
+        } else {
+            return ResponseEntity.status(404).body(Map.of(
+                    "message", "Alumno no encontrado",
+                    "codigo", 404
+            ));
+        }
     }
 }

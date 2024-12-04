@@ -41,8 +41,13 @@ public class SoporteTecnico_BitacoraServiceImpl implements SoporteTecnico_Bitaco
         return bitacora2Dao.save(Bitacora2);
     }
 
+
     @Override
-    public void eliminarBitacora(Long id) {
-        bitacora2Dao.deleteById(id);
+    public boolean eliminarBitacora(Long id) {
+        if (bitacora2Dao.existsById(id)) {
+            bitacora2Dao.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

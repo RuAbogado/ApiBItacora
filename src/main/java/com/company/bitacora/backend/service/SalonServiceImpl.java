@@ -39,8 +39,12 @@ public class SalonServiceImpl implements SalonService {
         return salonDao.save(nuevoSalon);
     }
 
+
     @Override
-    public void deleteSalon(Long id) {
+    public boolean deleteSalon(Long id) {
+        if(salonDao.existsById(id)) {
         salonDao.deleteById(id);
+        return true;}
+        return false;
     }
 }

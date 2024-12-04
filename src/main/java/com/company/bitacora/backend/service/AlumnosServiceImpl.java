@@ -42,8 +42,14 @@ public class AlumnosServiceImpl implements AlumnosService {
         return alumnosDao.save(alumnoNuevo);
     }
 
+
+
     @Override
-    public void deleteAlumno(Long id) {
-        alumnosDao.deleteById(id);
+    public boolean deleteAlumno(Long id) {
+        if(alumnosDao.existsById(id)) {
+            alumnosDao.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

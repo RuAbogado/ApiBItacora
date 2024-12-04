@@ -13,5 +13,5 @@ public interface AlumnosService {
 
     Alumnos updateAlumno(Long id, Alumnos alumno);   //actualizacion de un objeto de tipo alumno mediante dos parametros
 
-    void deleteAlumno(Long id); //se elimina un Alumno mediante el ID
+    boolean deleteAlumno(Long id); //se elimina un Alumno mediante el ID
 }
