@@ -33,7 +33,7 @@ public class JwtReqFilter extends OncePerRequestFilter {  // Extiende OncePerReq
         // Obtiene el encabezado 'Authorization' de la solicitud HTTP
         final String authorizationHeader = request.getHeader("Authorization");
 
-        String username = null;  // Variable para almacenar el nombre de usuario extraído del token
+        String username = null;  // Variable para almacenar el usuario de usuario extraído del token
         String jwt = null;  // Variable para almacenar el token JWT
 
         // Verifica si el encabezado 'Authorization' contiene un token JWT (comienza con "Bearer ")
