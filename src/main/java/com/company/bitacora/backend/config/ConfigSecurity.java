@@ -29,16 +29,14 @@ public class ConfigSecurity {
     @Lazy
     private JwtReqFilter jwtReqFilter;
 
-    @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configure -> configure
+                        .requestMatchers(HttpMethod.POST, "/v1/authenticate").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/alumnos").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/alumnos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/alumnos/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/v1/alumnos/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/v1/alumnos/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/bitacoras").permitAll()
@@ -57,7 +55,7 @@ public class ConfigSecurity {
                         .requestMatchers(HttpMethod.POST, "/v1/tecnicos").hasRole("Admin")
                         .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").hasRole("Admin")
                         .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").hasRole("Admin")
-                        .requestMatchers("/v1/authenticate").permitAll()
+
                 )
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new org.springframework.web.cors.CorsConfiguration();
