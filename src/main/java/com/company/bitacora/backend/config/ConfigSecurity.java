@@ -13,6 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,37 +27,35 @@ import java.util.List;
 public class ConfigSecurity {
 
     @Autowired
-
     @Lazy
     private JwtReqFilter jwtReqFilter;
 
+    @Bean
+    public UserDetailsService userDetailsService(DataSource dataSource) {
+        return new JdbcUserDetailsManager(dataSource);  // Utiliza JdbcUserDetailsManager para leer usuarios de la base de datos.
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configure -> configure
-                        .requestMatchers(HttpMethod.POST, "/v1/authenticate").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/alumnos").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/alumnos").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/alumnos/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/v1/alumnos/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/v1/alumnos/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/bitacoras").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/bitacoras").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/v1/bitacoras/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/v1/bitacoras/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/equipos").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/equipos").hasRole("Admin")
-                        .requestMatchers(HttpMethod.PUT, "/v1/equipos/**").hasRole("Admin")
-                        .requestMatchers(HttpMethod.DELETE, "/v1/equipos/**").hasRole("Admin")
-                        .requestMatchers(HttpMethod.GET, "/v1/salones").hasRole("Admin")
-                        .requestMatchers(HttpMethod.POST, "/v1/salones").hasRole("Admin")
-                        .requestMatchers(HttpMethod.PUT, "/v1/salones/**").hasRole("Admin")
-                        .requestMatchers(HttpMethod.DELETE, "/v1/salones/**").hasRole("Admin")
-                        .requestMatchers(HttpMethod.GET, "/v1/tecnicos").hasRole("Admin")
-                        .requestMatchers(HttpMethod.POST, "/v1/tecnicos").hasRole("Admin")
-                        .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").hasRole("Admin")
-                        .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").hasRole("Admin")
-
+                        .requestMatchers(HttpMethod.POST, "/v1/authenticate").permitAll()  // Ruta pública para autenticarse
+                        .requestMatchers(HttpMethod.GET, "/v1/alumnos").permitAll()  // Ruta pública para obtener alumnos
+                        .requestMatchers(HttpMethod.POST, "/v1/alumnos").permitAll()  // Ruta pública para crear un alumno
+                        .requestMatchers(HttpMethod.PUT, "/v1/alumnos/**").permitAll()  // Ruta pública para editar un alumno
+                        .requestMatchers(HttpMethod.GET, "/v1/alumnos/**").permitAll()  // Ruta pública para obtener alumnos por ID
+                        .requestMatchers(HttpMethod.GET, "/v1/bitacoras").permitAll()  // Ruta pública para obtener bitácoras
+                        .requestMatchers(HttpMethod.GET, "/v1/equipos").permitAll()  // Ruta pública para obtener equipos
+                        .requestMatchers(HttpMethod.POST, "/v1/equipos").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.PUT, "/v1/equipos/**").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.DELETE, "/v1/equipos/**").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.GET, "/v1/salones").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.POST, "/v1/salones").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.PUT, "/v1/salones/**").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.DELETE, "/v1/salones/**").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.GET, "/v1/tecnicos").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.POST, "/v1/tecnicos").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").hasRole("Admin")  // Requiere rol Admin
+                        .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").hasRole("Admin")  // Requiere rol Admin
                 )
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new org.springframework.web.cors.CorsConfiguration();
@@ -66,9 +66,9 @@ public class ConfigSecurity {
                     config.setExposedHeaders(List.of("Authorization"));
                     return config;
                 }))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtReqFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())  // Deshabilitar CSRF
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Stateless porque usamos JWT
+                .addFilterBefore(jwtReqFilter, UsernamePasswordAuthenticationFilter.class);  // Agregar filtro JWT
 
         return http.build();
     }
@@ -79,25 +79,8 @@ public class ConfigSecurity {
     }
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("{noop}admin1234")
-                .roles("Admin")
-                .build();
-
-        UserDetails hugo = User.builder()
-                .username("hugo")
-                .password("{noop}hugo123")
-                .roles("Empleado")
-                .build();
-
-        UserDetails edita = User.builder()
-                .username("edita")
-                .password("{noop}edita123")
-                .roles("Alumno")
-                .build();
-
-        return new InMemoryUserDetailsManager(admin, hugo, edita);
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();  // Puedes elegir otro tipo de PasswordEncoder si prefieres
     }
 }
+

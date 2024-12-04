@@ -3,6 +3,7 @@ package com.company.bitacora.backend.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
+
     // Clave secreta utilizada para firmar el JWT, debe ser mantenida en secreto
     private static final String JWT_SECRET_KEY = "losmerosmerosoa4eee";
 
@@ -35,7 +37,7 @@ public class JwtService {
         return claimsResolver.apply(extractAllClaims(token)); // Aplica la función de resolución al token
     }
 
-    // Método para extraer todos los claims (información) del token
+    //Método para extraer todos los claims (información) del token
     private Claims extractAllClaims(String token) {
         return Jwts.parser()  // Parser para parsear el JWT
                 .setSigningKey(JWT_SECRET_KEY)  // Usa la clave secreta para verificar la firma
@@ -53,7 +55,7 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();  // Crea un mapa de claims adicionales que se añadirán al token
         // Extrae el rol del usuario (el primer rol) y lo añade a los claims
         var rol = userDetails.getAuthorities().stream().collect(Collectors.toList()).get(0);
-        claims.put("rol", rol);  // Se añade el rol al token
+        claims.put("rol", rol.getAuthority());  // Se añade el rol al token
         return createToken(claims, userDetails.getUsername()); // Crea y retorna el token con los claims y el nombre de usuario
     }
 
@@ -75,4 +77,5 @@ public class JwtService {
         // Valida el token asegurándose que el nombre de usuario coincida y que el token no haya expirado
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
 }
