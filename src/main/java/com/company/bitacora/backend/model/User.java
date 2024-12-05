@@ -11,7 +11,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @Column(unique = true)
     private String username;  // El correo del usuario
     private String password;  // Contraseña cifrada
     private boolean enabled;  // Indica si el usuario está habilitado
