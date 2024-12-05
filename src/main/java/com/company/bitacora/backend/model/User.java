@@ -1,7 +1,9 @@
 package com.company.bitacora.backend.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -11,15 +13,32 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;  // El correo del usuario
+
+    @Column(nullable = false)
     private String password;  // Contraseña cifrada
+
+    @Column(nullable = false)
     private boolean enabled;  // Indica si el usuario está habilitado
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL) // Relación con 'Authority'
-    private List<Authority> authorities;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_authorities", // Tabla intermedia
+            joinColumns = @JoinColumn(name = "user_id"), // Clave foránea hacia 'users'
+            inverseJoinColumns = @JoinColumn(name = "authority_id") // Clave foránea hacia 'authorities'
+    )
+    private Set<Authority> authorities = new HashSet<>();  // Conjunto de roles asociados al usuario
 
     // Getters y Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -44,11 +63,11 @@ public class User {
         this.enabled = enabled;
     }
 
-    public List<Authority> getAuthorities() {
+    public Set<Authority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
 }

@@ -1,6 +1,7 @@
 package com.company.bitacora.backend.config;
 
 import com.company.bitacora.backend.filter.JwtReqFilter;
+import com.company.bitacora.backend.model.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,9 +12,15 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,6 +28,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Configuration // Indica que esta clase es una configuración de Spring.
 public class ConfigSecurity {
@@ -32,9 +42,20 @@ public class ConfigSecurity {
     // Bean que define el servicio de detalles de usuario, en este caso se utiliza un JdbcUserDetailsManager
     // para obtener los usuarios de una base de datos.
     @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
+    public UserDetailsService userDetailsService(UserDao userDao) {
+        return username -> {
+            Optional<com.company.bitacora.backend.model.User> userOptional = userDao.findByUsername(username);
+            com.company.bitacora.backend.model.User user = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+            Set<GrantedAuthority> authorities = user.getAuthorities().stream()
+                    .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+                    .collect(Collectors.toSet());
+
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        };
     }
+
+
 
     // Bean que define la configuración de seguridad HTTP, donde se configuran las reglas de acceso
     // y autenticación para las rutas de la API.
@@ -94,6 +115,11 @@ public class ConfigSecurity {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(); // Usando BCrypt para codificar las contraseñas
     }
 
 }

@@ -51,18 +51,31 @@ public class AlumnosServiceImpl implements AlumnosService {
         // 3. Crear y guardar el registro en la tabla 'users'
         User user = new User();
         user.setUsername(alumno.getCorreo());
-        user.setPassword("{bcrypt}"+encryptedPassword);  // Usa la misma contraseña encriptada
+        user.setPassword(encryptedPassword);  // Usa la misma contraseña encriptada
         user.setEnabled(true);
         userDao.save(user);
 
-        // 4. Crear y guardar el registro en la tabla 'authorities'
-        Authority authority = new Authority();
-        authority.setUser(user);  // Asigna el objeto User, no solo el correo
-        authority.setAuthority("ROLE_ALUMNO");  // Asignar el rol 'ROLE_ALUMNO'
+        // 4. Verificar si el rol 'ROLE_ALUMNO' ya existe en la base de datos
+        Authority authority = authorityDao.findByAuthority("ROLE_ALUMNO");
+        if (authority == null) {
+            // Si el rol no existe, crear uno nuevo
+            authority = new Authority();
+            authority.setAuthority("ROLE_ALUMNO");
+            authorityDao.save(authority);
+        }
+
+        // 5. Asociar el usuario con el rol y viceversa
+        authority.getUsers().add(user);  // Añadir el usuario al Set de usuarios del rol
+        user.getAuthorities().add(authority);  // Añadir el rol al Set de roles del usuario
+
+        // 6. Guardar la autoridad y actualizar el usuario
         authorityDao.save(authority);
+        userDao.save(user);
 
         return savedAlumno;
     }
+
+
 
 
 

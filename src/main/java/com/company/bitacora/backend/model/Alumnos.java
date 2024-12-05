@@ -3,7 +3,7 @@ package com.company.bitacora.backend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Alunmos")
+@Table(name = "Alumnos")
 public class Alumnos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
