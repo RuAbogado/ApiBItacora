@@ -73,7 +73,7 @@ public class ConfigSecurity {
                 // Configuración de CORS para permitir solicitudes desde un origen específico
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new org.springframework.web.cors.CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:8080")); // Ajusta el origen según el cliente
+                    config.setAllowedOrigins(List.of("http://192.168.105.148:8080")); // Ajusta el origen según el cliente
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Métodos permitidos
                     config.setAllowCredentials(true); // Permite credenciales en las solicitudes CORS
                     config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Especificar encabezados permitidos
@@ -96,29 +96,4 @@ public class ConfigSecurity {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // Bean que define un conjunto de usuarios en memoria para pruebas, sin usar una base de datos.
-    @Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-        // Definir usuarios con sus credenciales y roles
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("{noop}admin1234") // {noop} se utiliza para contraseñas en texto claro, no recomendadas en producción
-                .roles("Admin")
-                .build();
-
-        UserDetails hugo = User.builder()
-                .username("hugo")
-                .password("{noop}hugo123")
-                .roles("Empleado")
-                .build();
-
-        UserDetails edita = User.builder()
-                .username("edita")
-                .password("{noop}edita123")
-                .roles("Alumno")
-                .build();
-
-        // Crear y devolver un manager de usuarios en memoria con los usuarios definidos
-        return new InMemoryUserDetailsManager(admin, hugo, edita);
-    }
 }
