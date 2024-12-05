@@ -74,21 +74,21 @@ public class ConfigSecurity {
                                 .requestMatchers(HttpMethod.POST, "/v1/bitacoras").permitAll()// Solo Alumno puede crear
                                 .requestMatchers(HttpMethod.PUT, "/v1/bitacoras/**").permitAll()// Solo Empleado puede modificar
                                 .requestMatchers(HttpMethod.DELETE, "/v1/bitacoras/**").permitAll() // Empleado y Admin pueden eliminar
-                                .requestMatchers(HttpMethod.GET, "/v1/equipos").hasRole("Admin")
+                                .requestMatchers(HttpMethod.GET, "/v1/equipos").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/v1/equipos/**").hasRole("Admin")// Admin y Empleado pueden acceder
-                                .requestMatchers(HttpMethod.POST, "/v1/equipos").hasRole("Admin") // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.POST, "/v1/equipos").permitAll() // Solo Admin puede crear
                                 .requestMatchers(HttpMethod.PUT, "/v1/equipos/**").hasRole("Admin") // Solo Admin puede modificar
                                 .requestMatchers(HttpMethod.DELETE, "/v1/equipos/**").hasRole("Admin") // Solo Admin puede eliminar
-                                .requestMatchers(HttpMethod.GET, "/v1/salones").hasRole("Admin")
+                                .requestMatchers(HttpMethod.GET, "/v1/salones").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/v1/salones/**").hasRole("Admin") // Admin y Empleado pueden acceder
-                                .requestMatchers(HttpMethod.POST, "/v1/salones").hasRole("Admin") // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.POST, "/v1/salones").permitAll() // Solo Admin puede crear
                                 .requestMatchers(HttpMethod.PUT, "/v1/salones/**").hasRole("Admin") // Solo Admin puede modificar
                                 .requestMatchers(HttpMethod.DELETE, "/v1/salones/**").hasRole("Admin") // Solo Admin puede eliminar
                                 .requestMatchers(HttpMethod.GET, "/v1/tecnicos").hasRole("Admin")
                                 .requestMatchers(HttpMethod.GET, "/v1/tecnicos/**").hasRole("Admin")// Solo Admin puede acceder
                                 .requestMatchers(HttpMethod.POST, "/v1/tecnicos").hasRole("Admin") // Solo Admin puede crear
                                 .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").hasRole("Admin") // Solo Admin puede modificar
-                                .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").hasRole("Admin") // Solo Admin puede eliminar
+                                .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").hasRole("Admin")// Solo Admin puede eliminar
                         // Ruta pública para la autenticación
                 )
                 // Configuración de CORS para permitir solicitudes desde un origen específico
@@ -119,7 +119,8 @@ public class ConfigSecurity {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Usando BCrypt para codificar las contraseñas
+        return NoOpPasswordEncoder.getInstance(); // No encriptar las contraseñas
     }
+
 
 }

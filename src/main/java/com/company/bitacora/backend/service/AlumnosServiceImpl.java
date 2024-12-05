@@ -41,9 +41,7 @@ public class AlumnosServiceImpl implements AlumnosService {
 
     @Override
     public Alumnos saveAlumno(Alumnos alumno) {
-        // 1. Encriptar la contraseña con BCrypt (el prefijo {bcrypt} es añadido automáticamente)
-        String encryptedPassword = passwordEncoder.encode(alumno.getContrasena());
-        alumno.setContrasena(encryptedPassword);  // Guarda la contraseña en la tabla 'alumnos'
+         // Guarda la contraseña en la tabla 'alumnos'
 
         // 2. Guardar el alumno en la tabla 'alumnos'
         Alumnos savedAlumno = alumnosDao.save(alumno);
@@ -51,7 +49,7 @@ public class AlumnosServiceImpl implements AlumnosService {
         // 3. Crear y guardar el registro en la tabla 'users'
         User user = new User();
         user.setUsername(alumno.getCorreo());
-        user.setPassword(encryptedPassword);  // Usa la misma contraseña encriptada
+        user.setPassword(alumno.getContrasena());  // Usa la misma contraseña encriptada
         user.setEnabled(true);
         userDao.save(user);
 
