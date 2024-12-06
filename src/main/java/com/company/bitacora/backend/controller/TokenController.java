@@ -43,11 +43,7 @@ public class TokenController {
             // Devolver la respuesta con el token
             return ResponseEntity.ok(new TokenResponse(jwt));
         } catch (Exception e) {
-            // Imprimir la excepción si falla la autenticación
-            System.out.println("Error en la autenticación: " + e.getMessage());
-            e.printStackTrace(); // Para más detalles del error
             return ResponseEntity.status(401).body(new TokenResponse("Autenticación fallida"));
         }
     }
 }
-
