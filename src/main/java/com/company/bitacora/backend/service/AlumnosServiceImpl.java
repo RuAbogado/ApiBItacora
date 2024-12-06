@@ -6,6 +6,7 @@ import com.company.bitacora.backend.model.Authority;
 import com.company.bitacora.backend.model.User;
 import com.company.bitacora.backend.model.dao.AlumnosDao;
 import com.company.bitacora.backend.model.dao.AuthorityDao;
+import com.company.bitacora.backend.model.dao.UserAuthoritiesDao;
 import com.company.bitacora.backend.model.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +26,9 @@ public class AlumnosServiceImpl implements AlumnosService {
 
     @Autowired
     private AuthorityDao authorityDao;
+
+    @Autowired
+    private UserAuthoritiesDao userAuthoritiesDao;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -108,9 +112,16 @@ public class AlumnosServiceImpl implements AlumnosService {
         Alumnos alumno = alumnosDao.findByCorreo(correo)
                 .orElseThrow(() -> new AlumnoNotFoundException("Alumno con correo " + correo + " no encontrado"));
 
-        // Eliminar usuario asociado si existe
+        // Eliminar los registros relacionados en user_authorities
         User user = userDao.findByUsername(correo).orElse(null);
         if (user != null) {
+            // Eliminar registros en user_authorities primero (si los hay)
+            System.out.println(user.getId());
+            userAuthoritiesDao.deleteByUserId(user.getId());
+
+
+            userAuthoritiesDao.flush();
+            // Eliminar usuario
             userDao.delete(user);
         }
 
@@ -119,5 +130,6 @@ public class AlumnosServiceImpl implements AlumnosService {
 
         return true;
     }
+
 
 }
