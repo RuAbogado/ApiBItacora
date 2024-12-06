@@ -1,14 +1,15 @@
 package com.company.bitacora.backend.controller;
 
+import com.company.bitacora.backend.exceptio.AlumnoNotFoundException;
 import com.company.bitacora.backend.model.Alumnos;
 import com.company.bitacora.backend.service.AlumnosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @RequestMapping("/v1")
 public class AlumnosController {
@@ -26,9 +27,9 @@ public class AlumnosController {
         ));
     }
 
-    @GetMapping("/alumnos/{id}")
-    public ResponseEntity<?> getAlumno(@PathVariable Long id) {
-        Alumnos alumno = alumnosService.getAlumnoById(id);
+    @GetMapping("/alumnos/{correo}")
+    public ResponseEntity<?> getAlumno(@PathVariable String correo) {
+        Alumnos alumno = alumnosService.getAlumnoByCorreo(correo);
         if (alumno != null) {
             return ResponseEntity.ok(Map.of(
                     "message", "Alumno obtenido con éxito",
@@ -46,44 +47,49 @@ public class AlumnosController {
     @PostMapping("/alumnos")
     public ResponseEntity<?> createAlumno(@RequestBody Alumnos alumnos) {
         Alumnos newAlumnos = alumnosService.saveAlumno(alumnos);
-        return ResponseEntity
-                .status(201) // Código HTTP 201 (Created)
-                .body(Map.of(
-                        "message", "Alumno registrado con éxito",
-                        "data", newAlumnos,
-                        "codigo", 201
-                ));
+        return ResponseEntity.status(201).body(Map.of(
+                "message", "Alumno registrado con éxito",
+                "data", newAlumnos,
+                "codigo", 201
+        ));
     }
 
-    @PutMapping("/alumnos/{id}")
-    public ResponseEntity<?> updateAlumno(@PathVariable Long id, @RequestBody Alumnos alumnos) {
-        Alumnos updatedAlumnos = alumnosService.updateAlumno(id, alumnos);
-        if (updatedAlumnos != null) {
+    @PutMapping("/alumnos/{correo}")
+    public ResponseEntity<?> updateAlumno(@PathVariable String correo, @RequestBody Alumnos alumnos) {
+        try {
+            Alumnos updatedAlumnos = alumnosService.updateAlumno(correo, alumnos);
             return ResponseEntity.ok(Map.of(
                     "message", "Alumno actualizado con éxito",
                     "data", updatedAlumnos,
                     "codigo", 200
             ));
-        } else {
+        } catch (AlumnoNotFoundException ex) {
             return ResponseEntity.status(404).body(Map.of(
                     "message", "Alumno no encontrado",
                     "codigo", 404
+            ));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "message", "Error al actualizar el alumno",
+                    "codigo", 500
             ));
         }
     }
 
-    @DeleteMapping("/alumnos/{id}")
-    public ResponseEntity<?> deleteAlumno(@PathVariable Long id) {
-        boolean deleted = alumnosService.deleteAlumno(id);
-        if (deleted) {
-            return ResponseEntity.status(204).body(Map.of(
-                    "message", "Alumno eliminado con éxito",
-                    "codigo", 204
-            ));
-        } else {
+    @DeleteMapping("/alumnos/{correo}")
+    public ResponseEntity<?> deleteAlumno(@PathVariable String correo) {
+        try {
+            boolean deleted = alumnosService.deleteAlumno(correo);
+            return ResponseEntity.noContent().build();
+        } catch (AlumnoNotFoundException ex) {
             return ResponseEntity.status(404).body(Map.of(
-                    "message", "Alumno no encontrado",
+                    "message", ex.getMessage(),
                     "codigo", 404
+            ));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "message", "Error eliminando el alumno",
+                    "codigo", 500
             ));
         }
     }

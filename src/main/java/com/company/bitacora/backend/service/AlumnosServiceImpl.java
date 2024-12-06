@@ -1,5 +1,6 @@
 package com.company.bitacora.backend.service;
 
+import com.company.bitacora.backend.exceptio.AlumnoNotFoundException;
 import com.company.bitacora.backend.model.Alumnos;
 import com.company.bitacora.backend.model.Authority;
 import com.company.bitacora.backend.model.User;
@@ -7,12 +8,11 @@ import com.company.bitacora.backend.model.dao.AlumnosDao;
 import com.company.bitacora.backend.model.dao.AuthorityDao;
 import com.company.bitacora.backend.model.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AlumnosServiceImpl implements AlumnosService {
@@ -26,78 +26,98 @@ public class AlumnosServiceImpl implements AlumnosService {
     @Autowired
     private AuthorityDao authorityDao;
 
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
     public List<Alumnos> getAlumnos() {
         return (List<Alumnos>) alumnosDao.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Alumnos getAlumnoById(Long id) {
-        Optional<Alumnos> alumnos= alumnosDao.findById(id);
-        return alumnos.orElseThrow(()-> new RuntimeException("Alumno no encontrado"));
+    public Alumnos getAlumnoByCorreo(String correo) {
+        if (correo == null || correo.isEmpty()) {
+            throw new IllegalArgumentException("El correo no puede ser nulo o vacío");
+        }
+        return alumnosDao.findByCorreo(correo)
+                .orElseThrow(() -> new AlumnoNotFoundException("Alumno con correo " + correo + " no encontrado"));
     }
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+    @Transactional
     @Override
     public Alumnos saveAlumno(Alumnos alumno) {
-        // 1. Encriptar la contraseña con BCrypt (el prefijo {bcrypt} es añadido automáticamente)
-        String encryptedPassword = passwordEncoder.encode(alumno.getContrasena());
-        alumno.setContrasena(encryptedPassword);  // Guarda la contraseña en la tabla 'alumnos'
+        if (alumnosDao.existsById(alumno.getCorreo())) {
+            throw new IllegalArgumentException("Ya existe un alumno con el correo: " + alumno.getCorreo());
+        }
 
-        // 2. Guardar el alumno en la tabla 'alumnos'
+        // Encriptar contraseña
+        String encryptedPassword = passwordEncoder.encode(alumno.getContrasena());
+        alumno.setContrasena(encryptedPassword);
+
+        // Guardar alumno
         Alumnos savedAlumno = alumnosDao.save(alumno);
 
-        // 3. Crear y guardar el registro en la tabla 'users'
+        // Crear y guardar usuario
         User user = new User();
         user.setUsername(alumno.getCorreo());
-        user.setPassword(encryptedPassword);  // Usa la misma contraseña encriptada
+        user.setPassword(encryptedPassword);
         user.setEnabled(true);
         userDao.save(user);
 
-        // 4. Verificar si el rol 'ROLE_ALUMNO' ya existe en la base de datos
+        // Asociar o crear rol 'ROLE_ALUMNO'
         Authority authority = authorityDao.findByAuthority("ROLE_ALUMNO");
         if (authority == null) {
-            // Si el rol no existe, crear uno nuevo
             authority = new Authority();
             authority.setAuthority("ROLE_ALUMNO");
             authorityDao.save(authority);
         }
 
-        // 5. Asociar el usuario con el rol y viceversa
-        authority.getUsers().add(user);  // Añadir el usuario al Set de usuarios del rol
-        user.getAuthorities().add(authority);  // Añadir el rol al Set de roles del usuario
+        // Relacionar usuario y rol
+        authority.getUsers().add(user);
+        user.getAuthorities().add(authority);
 
-        // 6. Guardar la autoridad y actualizar el usuario
         authorityDao.save(authority);
         userDao.save(user);
 
         return savedAlumno;
     }
 
-
-
-
-
+    @Transactional
     @Override
-    public Alumnos updateAlumno(Long id, Alumnos alumno) {
-        Alumnos alumnoNuevo= getAlumnoById(id);
-        alumnoNuevo.setNombre(alumno.getNombre());
-        alumnoNuevo.setApellido(alumno.getApellido());
-        alumnoNuevo.setMatricula(alumno.getMatricula());
-        alumnoNuevo.setCorreo(alumno.getCorreo());
-        alumnoNuevo.setContrasena(alumno.getContrasena());
-        return alumnosDao.save(alumnoNuevo);
-    }
+    public Alumnos updateAlumno(String correo, Alumnos alumno) {
+        Alumnos existingAlumno = getAlumnoByCorreo(correo);
 
+        // Actualizar campos
+        existingAlumno.setNombre(alumno.getNombre());
+        existingAlumno.setApellido(alumno.getApellido());
+        existingAlumno.setMatricula(alumno.getMatricula());
 
-
-    @Override
-    public boolean deleteAlumno(Long id) {
-        if(alumnosDao.existsById(id)) {
-            alumnosDao.deleteById(id);
-            return true;
+        // Actualizar contraseña si se proporciona
+        if (alumno.getContrasena() != null && !alumno.getContrasena().isEmpty()) {
+            String encryptedPassword = passwordEncoder.encode(alumno.getContrasena());
+            existingAlumno.setContrasena(encryptedPassword);
         }
-        return false;
+
+        return alumnosDao.save(existingAlumno);
     }
+
+    @Transactional
+    @Override
+    public boolean deleteAlumno(String correo) {
+        // Verifica si el alumno existe
+        Alumnos alumno = alumnosDao.findByCorreo(correo)
+                .orElseThrow(() -> new AlumnoNotFoundException("Alumno con correo " + correo + " no encontrado"));
+
+        // Eliminar usuario asociado si existe
+        User user = userDao.findByUsername(correo).orElse(null);
+        if (user != null) {
+            userDao.delete(user);
+        }
+
+        // Eliminar el alumno
+        alumnosDao.delete(alumno);
+
+        return true;
+    }
+
 }

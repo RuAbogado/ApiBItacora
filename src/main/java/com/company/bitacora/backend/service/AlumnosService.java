@@ -5,13 +5,13 @@ import com.company.bitacora.backend.model.Alumnos;
 import java.util.List;
 
 public interface AlumnosService {
-    List<Alumnos> getAlumnos();  //retorna todos los objetos de tipo Alumnos
+    List<Alumnos> getAlumnos();
 
-    Alumnos getAlumnoById(Long id);   //busqueda de un alumno mediante el ID
+    Alumnos getAlumnoByCorreo(String correo);
 
-    Alumnos saveAlumno(Alumnos alumno);   //se guarda un nuevo objeto de tipo Alumno
+    Alumnos saveAlumno(Alumnos alumno);
 
-    Alumnos updateAlumno(Long id, Alumnos alumno);   //actualizacion de un objeto de tipo alumno mediante dos parametros
+    Alumnos updateAlumno(String correo, Alumnos alumno);
 
-    boolean deleteAlumno(Long id); //se elimina un Alumno mediante el ID
+    boolean deleteAlumno(String correo);
 }
