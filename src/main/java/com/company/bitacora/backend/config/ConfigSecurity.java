@@ -76,12 +76,12 @@ public class ConfigSecurity {
                                 .requestMatchers(HttpMethod.DELETE, "/v1/bitacoras/**").permitAll() // Empleado y Admin pueden eliminar
                                 .requestMatchers(HttpMethod.GET, "/v1/equipos").hasRole("Admin")
                                 .requestMatchers(HttpMethod.GET, "/v1/equipos/**").hasRole("Admin")// Admin y Empleado pueden acceder
-                                .requestMatchers(HttpMethod.POST, "/v1/equipos").hasRole("Admin") // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.POST, "/v1/equipos").permitAll() // Solo Admin puede crear
                                 .requestMatchers(HttpMethod.PUT, "/v1/equipos/**").hasRole("Admin") // Solo Admin puede modificar
                                 .requestMatchers(HttpMethod.DELETE, "/v1/equipos/**").hasRole("Admin") // Solo Admin puede eliminar
                                 .requestMatchers(HttpMethod.GET, "/v1/salones").hasRole("Admin")
                                 .requestMatchers(HttpMethod.GET, "/v1/salones/**").hasRole("Admin") // Admin y Empleado pueden acceder
-                                .requestMatchers(HttpMethod.POST, "/v1/salones").hasRole("Admin") // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.POST, "/v1/salones").permitAll() // Solo Admin puede crear
                                 .requestMatchers(HttpMethod.PUT, "/v1/salones/**").hasRole("Admin") // Solo Admin puede modificar
                                 .requestMatchers(HttpMethod.DELETE, "/v1/salones/**").hasRole("Admin") // Solo Admin puede eliminar
                                 .requestMatchers(HttpMethod.GET, "/v1/tecnicos").hasRole("Admin")
