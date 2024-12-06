@@ -42,9 +42,15 @@ public class SoporteTecnicoServiceImpl implements SoporteTecnicoService {
         return soporteTecnicoDao.save(soporteTecnico);
     }
 
+
+
     @Override
-    public void deleteSoporteTecnico(Long id) {
-        soporteTecnicoDao.deleteById(id);
+    public boolean deleteSoporteTecnico(Long id) {
+        if (soporteTecnicoDao.existsById(id)) {
+            soporteTecnicoDao.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
 }

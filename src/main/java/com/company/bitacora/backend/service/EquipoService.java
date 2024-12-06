@@ -13,5 +13,5 @@ public interface EquipoService {
 
     Equipo updateEquipo(Long id, Equipo equipo);
 
-    void deleteEquipo(Long id);
+    boolean deleteEquipo(Long id);
 }

@@ -13,6 +13,6 @@ public interface SoporteTecnicoService {
 
     SoporteTecnico updateSoporteTecnico(Long id, SoporteTecnico soporteTecnico);
 
-    void deleteSoporteTecnico(Long id);
+    boolean deleteSoporteTecnico(Long id);
 
 }
