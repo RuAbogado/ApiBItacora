@@ -1,6 +1,7 @@
 package com.company.bitacora.backend.model;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,6 +23,14 @@ public class Bitacora implements Serializable {
     @Lob
     private byte[] foto;
     private String descripcion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "salon_id")
+    private Salon salon;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "equipo_id")
+    private Equipo equipo;
 
     // Getters y Setters
     public Long getId() {
@@ -95,5 +104,15 @@ public class Bitacora implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+
+    public Salon getSalon() {return salon;}
+
+    public void setSalon(Salon salon) {this.salon = salon;}
+
+    public Equipo getEquipo() {return equipo;}
+
+    public void setEquipo(Equipo equipo) {this.equipo = equipo;}
+
 
 }
