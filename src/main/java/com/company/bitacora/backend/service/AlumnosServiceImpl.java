@@ -51,8 +51,8 @@ public class AlumnosServiceImpl implements AlumnosService {
         }
 
         // Encriptar contraseña
-        String encryptedPassword = passwordEncoder.encode(alumno.getContrasena());
-        alumno.setContrasena(encryptedPassword);
+        //String encryptedPassword = passwordEncoder.encode(alumno.getContrasena());
+        //alumno.setContrasena(encryptedPassword);
 
         // Guardar alumno
         Alumnos savedAlumno = alumnosDao.save(alumno);
@@ -60,7 +60,7 @@ public class AlumnosServiceImpl implements AlumnosService {
         // Crear y guardar usuario
         User user = new User();
         user.setUsername(alumno.getCorreo());
-        user.setPassword(encryptedPassword);
+        user.setPassword(alumno.getContrasena());
         user.setEnabled(true);
         userDao.save(user);
 

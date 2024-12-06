@@ -119,7 +119,8 @@ public class ConfigSecurity {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Usando BCrypt para codificar las contraseñas
+        return NoOpPasswordEncoder.getInstance(); // Contraseñas sin encriptar
     }
+
 
 }
