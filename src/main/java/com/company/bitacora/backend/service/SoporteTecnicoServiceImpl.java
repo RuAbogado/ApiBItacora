@@ -1,6 +1,5 @@
 package com.company.bitacora.backend.service;
 
-
 import com.company.bitacora.backend.model.SoporteTecnico;
 import com.company.bitacora.backend.model.dao.SoporteTecnicoDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class SoporteTecnicoServiceImpl implements SoporteTecnicoService {
     @Override
     public SoporteTecnico getSoporteTecnico(Long id) {
         Optional<SoporteTecnico> soporteTecnico = soporteTecnicoDao.findById(id);
-        return soporteTecnico.orElseThrow(()-> new RuntimeException("Tecnico no encontrado"));
+        return soporteTecnico.orElseThrow(() -> new RuntimeException("Técnico no encontrado"));
     }
 
     @Override
@@ -33,16 +32,19 @@ public class SoporteTecnicoServiceImpl implements SoporteTecnicoService {
 
     @Override
     public SoporteTecnico updateSoporteTecnico(Long id, SoporteTecnico soporteTecnico) {
-        SoporteTecnico Tecnico = getSoporteTecnico(id);
-        Tecnico.setNombre(soporteTecnico.getNombre());
-        Tecnico.setApellido(soporteTecnico.getApellido());
-        Tecnico.setCorreo(soporteTecnico.getCorreo());
-        Tecnico.setContrasena(soporteTecnico.getContrasena());
-        Tecnico.setTipo(soporteTecnico.getTipo());
-        return soporteTecnicoDao.save(soporteTecnico);
+        // Obtén el técnico existente en base al ID
+        SoporteTecnico tecnicoExistente = getSoporteTecnico(id);
+
+        // Actualiza los campos con los valores proporcionados
+        tecnicoExistente.setNombre(soporteTecnico.getNombre());
+        tecnicoExistente.setApellido(soporteTecnico.getApellido());
+        tecnicoExistente.setCorreo(soporteTecnico.getCorreo());
+        tecnicoExistente.setContrasena(soporteTecnico.getContrasena());
+        tecnicoExistente.setTipo(soporteTecnico.getTipo());
+
+        // Guarda el técnico actualizado y devuélvelo
+        return soporteTecnicoDao.save(tecnicoExistente);  // Aquí guardamos el técnico actualizado
     }
-
-
 
     @Override
     public boolean deleteSoporteTecnico(Long id) {
@@ -52,5 +54,4 @@ public class SoporteTecnicoServiceImpl implements SoporteTecnicoService {
         }
         return false;
     }
-
 }
