@@ -84,17 +84,17 @@ public class ConfigSecurity {
                                 .requestMatchers(HttpMethod.POST, "/v1/salones").permitAll() // Solo Admin puede crear
                                 .requestMatchers(HttpMethod.PUT, "/v1/salones/**").hasRole("Admin") // Solo Admin puede modificar
                                 .requestMatchers(HttpMethod.DELETE, "/v1/salones/**").hasRole("Admin") // Solo Admin puede eliminar
-                                .requestMatchers(HttpMethod.GET, "/v1/tecnicos").hasRole("Admin")
-                                .requestMatchers(HttpMethod.GET, "/v1/tecnicos/**").hasRole("Admin")// Solo Admin puede acceder
-                                .requestMatchers(HttpMethod.POST, "/v1/tecnicos").hasRole("Admin") // Solo Admin puede crear
-                                .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").hasRole("Admin") // Solo Admin puede modificar
-                                .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").hasRole("Admin") // Solo Admin puede eliminar
+                                .requestMatchers(HttpMethod.GET, "/v1/tecnicos").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/v1/tecnicos/**").permitAll()// Solo Admin puede acceder
+                                .requestMatchers(HttpMethod.POST, "/v1/tecnicos").permitAll() // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").permitAll() // Solo Admin puede modificar
+                                .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").permitAll() // Solo Admin puede eliminar
                         // Ruta pública para la autenticación
                 )
                 // Configuración de CORS para permitir solicitudes desde un origen específico
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new org.springframework.web.cors.CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://192.168.105.148:8080")); // Ajusta el origen según el cliente
+                    config.setAllowedOrigins(List.of("http://localhost:63343")); // Ajusta el origen según el cliente
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Métodos permitidos
                     config.setAllowCredentials(true); // Permite credenciales en las solicitudes CORS
                     config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Especificar encabezados permitidos
