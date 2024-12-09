@@ -1,6 +1,7 @@
 package com.company.bitacora.backend.service;
 
 import com.company.bitacora.backend.model.SoporteTecnico;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -11,8 +12,8 @@ public interface SoporteTecnicoService {
 
     SoporteTecnico saveSoporteTecnico(SoporteTecnico soporteTecnico);
 
-    SoporteTecnico updateSoporteTecnico(Long id, SoporteTecnico soporteTecnico);
+    SoporteTecnico updateSoporteTecnico(String correo, SoporteTecnico soporteTecnico);
 
-    boolean deleteSoporteTecnico(Long id);
-
+    @Transactional
+    boolean deleteSoporteTecnico(String correo);
 }

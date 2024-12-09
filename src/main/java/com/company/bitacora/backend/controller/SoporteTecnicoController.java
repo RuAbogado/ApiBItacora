@@ -53,9 +53,9 @@ public class SoporteTecnicoController {
         ));
     }
 
-    @PutMapping("/tecnicos/{id}")
-    public ResponseEntity<?> updateTecnico(@PathVariable Long id, @RequestBody SoporteTecnico soporteTecnico) {
-        SoporteTecnico updatedTecnico = soporteTecnicoService.updateSoporteTecnico(id, soporteTecnico);
+    @PutMapping("/tecnicos/{correo}")
+    public ResponseEntity<?> updateTecnico(@PathVariable String correo, @RequestBody SoporteTecnico soporteTecnico) {
+        SoporteTecnico updatedTecnico = soporteTecnicoService.updateSoporteTecnico(correo, soporteTecnico);
         if (updatedTecnico != null) {
             return ResponseEntity.ok(Map.of(
                     "message", "Técnico actualizado con éxito",
@@ -70,9 +70,9 @@ public class SoporteTecnicoController {
         }
     }
 
-    @DeleteMapping("/tecnicos/{id}")
-    public ResponseEntity<?> deleteTecnico(@PathVariable Long id) {
-        boolean deleted = soporteTecnicoService.deleteSoporteTecnico(id);
+    @DeleteMapping("/tecnicos/{correo}")
+    public ResponseEntity<?> deleteTecnico(@PathVariable String correo) {
+        boolean deleted = soporteTecnicoService.deleteSoporteTecnico(correo);
         if (deleted) {
             return ResponseEntity.status(204).body(Map.of(
                     "message", "Técnico eliminado con éxito",
