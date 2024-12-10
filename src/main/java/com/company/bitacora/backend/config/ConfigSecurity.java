@@ -25,6 +25,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -75,30 +76,30 @@ public class ConfigSecurity {
                                 .requestMatchers(HttpMethod.PUT, "/v1/bitacoras/**").permitAll()// Solo Empleado puede modificar
                                 .requestMatchers(HttpMethod.DELETE, "/v1/bitacoras/**").permitAll() // Empleado y Admin pueden eliminar
                                 .requestMatchers(HttpMethod.GET, "/v1/equipos").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/v1/equipos/**").permitAll() // Admin y Empleado pueden acceder
+                                .requestMatchers(HttpMethod.GET, "/v1/equipos/**").permitAll()// Admin y Empleado pueden acceder
                                 .requestMatchers(HttpMethod.POST, "/v1/equipos").permitAll() // Solo Admin puede crear
                                 .requestMatchers(HttpMethod.PUT, "/v1/equipos/**").permitAll() // Solo Admin puede modificar
-                                .requestMatchers(HttpMethod.DELETE, "/v1/equipos/**").permitAll()  // Solo Admin puede eliminar
+                                .requestMatchers(HttpMethod.DELETE, "/v1/equipos/**").permitAll() // Solo Admin puede eliminar
                                 .requestMatchers(HttpMethod.GET, "/v1/salones").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/v1/salones/**").permitAll()  // Admin y Empleado pueden acceder
-                                .requestMatchers(HttpMethod.POST, "/v1/salones").permitAll()  // Solo Admin puede crear
-                                .requestMatchers(HttpMethod.PUT, "/v1/salones/**").permitAll()  // Solo Admin puede modificar
+                                .requestMatchers(HttpMethod.GET, "/v1/salones/**").permitAll() // Admin y Empleado pueden acceder
+                                .requestMatchers(HttpMethod.POST, "/v1/salones").permitAll() // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.PUT, "/v1/salones/**").permitAll() // Solo Admin puede modificar
                                 .requestMatchers(HttpMethod.DELETE, "/v1/salones/**").permitAll() // Solo Admin puede eliminar
                                 .requestMatchers(HttpMethod.GET, "/v1/tecnicos").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/v1/tecnicos/**").permitAll() // Solo Admin puede acceder
-                                .requestMatchers(HttpMethod.POST, "/v1/tecnicos").permitAll()  // Solo Admin puede crear
-                                .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").permitAll()  // Solo Admin puede modificar
-                                .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").permitAll()  // Solo Admin puede eliminar
+                                .requestMatchers(HttpMethod.GET, "/v1/tecnicos/**").permitAll()// Solo Admin puede acceder
+                                .requestMatchers(HttpMethod.POST, "/v1/tecnicos").permitAll() // Solo Admin puede crear
+                                .requestMatchers(HttpMethod.PUT, "/v1/tecnicos/**").permitAll() // Solo Admin puede modificar
+                                .requestMatchers(HttpMethod.DELETE, "/v1/tecnicos/**").permitAll() // Solo Admin puede eliminar
                         // Ruta pública para la autenticación
                 )
                 // Configuración de CORS para permitir solicitudes desde un origen específico
                 .cors(cors -> cors.configurationSource(request -> {
-                    var config = new org.springframework.web.cors.CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:63342")); // Ajusta el origen según el cliente
-                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Métodos permitidos
-                    config.setAllowCredentials(true); // Permite credenciales en las solicitudes CORS
-                    config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Especificar encabezados permitidos
-                    config.setExposedHeaders(List.of("Authorization")); // Encabezados visibles para el cliente                    return config;
+                    var config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("http://localhost:9090", "http://127.0.0.1:9090")); // Orígenes permitidos
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
+                    config.setAllowCredentials(true); // Permite credenciales
+                    config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With")); // Encabezados permitidos
+                    config.setExposedHeaders(List.of("Authorization")); // Encabezados expuestos al cliente
                     return config;
                 }))
                 // Deshabilitar CSRF (Cross-Site Request Forgery) porque la aplicación probablemente está utilizando JWT
@@ -119,7 +120,8 @@ public class ConfigSecurity {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Usando BCrypt para codificar las contraseñas
+        return NoOpPasswordEncoder.getInstance(); // Contraseñas sin encriptar
     }
+
 
 }

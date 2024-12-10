@@ -9,23 +9,30 @@ public class SoporteTecnico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    String Nombre;
-    String Apellido;
-    String Correo;
-    String Contrasena;
-    String Tipo;
+    @Column(name = "nombre") // Nombre en base de datos
+    private String Nombre;
+
+    @Column(name = "apellido") // Apellido en base de datos
+    private String Apellido;
+
+    @Column(name = "correo") // correo en base de datos
+    private String correo;
+
+    @Column(name = "contrasena") // Contrasena en base de datos
+    private String Contrasena;
+
+    @Column(name = "tipo") // Tipo en base de datos
+    private String Tipo;
 
     public SoporteTecnico() {
-
     }
 
     public SoporteTecnico(String Nombre, String Apellido, String Correo, String Contrasena, String Tipo) {
         this.Nombre = Nombre;
         this.Apellido = Apellido;
-        this.Correo = Correo;
+        this.correo = Correo;
         this.Contrasena = Contrasena;
         this.Tipo = Tipo;
-
     }
 
     public Long getId() {
@@ -53,11 +60,11 @@ public class SoporteTecnico {
     }
 
     public String getCorreo() {
-        return Correo;
+        return correo;
     }
 
     public void setCorreo(String Correo) {
-        this.Correo = Correo;
+        this.correo = Correo;
     }
 
     public String getContrasena() {
@@ -65,7 +72,7 @@ public class SoporteTecnico {
     }
 
     public void setContrasena(String Contrasena) {
-        this.Correo = Contrasena;
+        this.Contrasena = Contrasena;
     }
 
     public String getTipo() {

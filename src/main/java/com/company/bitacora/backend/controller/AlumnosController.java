@@ -80,7 +80,11 @@ public class AlumnosController {
     public ResponseEntity<?> deleteAlumno(@PathVariable String correo) {
         try {
             boolean deleted = alumnosService.deleteAlumno(correo);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(Map.of(
+                    "message", "Alumno Eliminado con éxito",
+                    "codigo", 204
+            ));
+
         } catch (AlumnoNotFoundException ex) {
             return ResponseEntity.status(404).body(Map.of(
                     "message", ex.getMessage(),
