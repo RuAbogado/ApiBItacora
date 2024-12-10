@@ -5,20 +5,26 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "Equipo")
 public class Equipo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String Marca;
-    private String Modelo;
-    private String numeroSerie;  // Nuevo campo para el número de serie
+    @Column(nullable = false)
+    private String marca;
+
+    @Column(nullable = false)
+    private String modelo;
+
+    @Column(nullable = false, unique = true)
+    private String numeroSerie;
 
     public Equipo() {
     }
 
-    public Equipo(String Marca, String Modelo, String numeroSerie) {
-        this.Marca = Marca;
-        this.Modelo = Modelo;
+    public Equipo(String marca, String modelo, String numeroSerie) {
+        this.marca = marca;
+        this.modelo = modelo;
         this.numeroSerie = numeroSerie;
     }
 
@@ -31,19 +37,19 @@ public class Equipo {
     }
 
     public String getMarca() {
-        return Marca;
+        return marca;
     }
 
-    public void setMarca(String Marca) {
-        this.Marca = Marca;
+    public void setMarca(String marca) {
+        this.marca = marca;
     }
 
     public String getModelo() {
-        return Modelo;
+        return modelo;
     }
 
-    public void setModelo(String Modelo) {
-        this.Modelo = Modelo;
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
     }
 
     public String getNumeroSerie() {

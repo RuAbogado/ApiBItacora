@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EquipoServiceImpl implements EquipoService {
@@ -22,10 +21,9 @@ public class EquipoServiceImpl implements EquipoService {
 
     @Override
     public Equipo getEquipoById(Long id) {
-        Optional<Equipo> equipo = equipoDao.findById(id);
-        return equipo.orElseThrow(() -> new RuntimeException("Equipo no encontrado"));
+        return equipoDao.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Equipo no encontrado con ID: " + id));
     }
-
 
     @Override
     public Equipo saveEquipo(Equipo equipo) {
@@ -37,13 +35,13 @@ public class EquipoServiceImpl implements EquipoService {
         Equipo nuevoEquipo = getEquipoById(id);
         nuevoEquipo.setMarca(equipo.getMarca());
         nuevoEquipo.setModelo(equipo.getModelo());
+        nuevoEquipo.setNumeroSerie(equipo.getNumeroSerie());
         return equipoDao.save(nuevoEquipo);
     }
 
-
     @Override
     public boolean deleteEquipo(Long id) {
-        if(equipoDao.existsById(id)){
+        if (equipoDao.existsById(id)) {
             equipoDao.deleteById(id);
             return true;
         }

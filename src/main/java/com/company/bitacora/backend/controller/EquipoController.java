@@ -29,18 +29,11 @@ public class EquipoController {
     @GetMapping("/equipos/{id}")
     public ResponseEntity<?> buscar(@PathVariable Long id) {
         Equipo equipo = equipoService.getEquipoById(id);
-        if (equipo != null) {
-            return ResponseEntity.ok(Map.of(
-                    "message", "Equipo obtenido con éxito",
-                    "data", equipo,
-                    "codigo", 200
-            ));
-        } else {
-            return ResponseEntity.status(404).body(Map.of(
-                    "message", "Equipo no encontrado",
-                    "codigo", 404
-            ));
-        }
+        return ResponseEntity.ok(Map.of(
+                "message", "Equipo obtenido con éxito",
+                "data", equipo,
+                "codigo", 200
+        ));
     }
 
     @PostMapping("/equipos")
@@ -56,28 +49,18 @@ public class EquipoController {
     @PutMapping("/equipos/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Equipo equipo) {
         Equipo updateEquipo = equipoService.updateEquipo(id, equipo);
-        if (updateEquipo != null) {
-            return ResponseEntity.ok(Map.of(
-                    "message", "Equipo actualizado con éxito",
-                    "data", updateEquipo,
-                    "codigo", 200
-            ));
-        } else {
-            return ResponseEntity.status(404).body(Map.of(
-                    "message", "Equipo no encontrado",
-                    "codigo", 404
-            ));
-        }
+        return ResponseEntity.ok(Map.of(
+                "message", "Equipo actualizado con éxito",
+                "data", updateEquipo,
+                "codigo", 200
+        ));
     }
 
     @DeleteMapping("/equipos/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id) {
         boolean deleted = equipoService.deleteEquipo(id);
         if (deleted) {
-            return ResponseEntity.status(204).body(Map.of(
-                    "message", "Equipo eliminado con éxito",
-                    "codigo", 204
-            ));
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.status(404).body(Map.of(
                     "message", "Equipo no encontrado",
