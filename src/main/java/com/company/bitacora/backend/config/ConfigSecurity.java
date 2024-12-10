@@ -25,6 +25,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -93,12 +94,12 @@ public class ConfigSecurity {
                 )
                 // Configuración de CORS para permitir solicitudes desde un origen específico
                 .cors(cors -> cors.configurationSource(request -> {
-                    var config = new org.springframework.web.cors.CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:63343")); // Ajusta el origen según el cliente
-                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Métodos permitidos
-                    config.setAllowCredentials(true); // Permite credenciales en las solicitudes CORS
-                    config.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Especificar encabezados permitidos
-                    config.setExposedHeaders(List.of("Authorization")); // Encabezados visibles para el cliente                    return config;
+                    var config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("http://localhost:9090", "http://127.0.0.1:9090")); // Orígenes permitidos
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
+                    config.setAllowCredentials(true); // Permite credenciales
+                    config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With")); // Encabezados permitidos
+                    config.setExposedHeaders(List.of("Authorization")); // Encabezados expuestos al cliente
                     return config;
                 }))
                 // Deshabilitar CSRF (Cross-Site Request Forgery) porque la aplicación probablemente está utilizando JWT
