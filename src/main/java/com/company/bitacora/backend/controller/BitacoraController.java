@@ -46,14 +46,29 @@ public class BitacoraController {
     }
 
     @PostMapping("/bitacoras")
-    public ResponseEntity<?> crear(@RequestBody Bitacora bitacora) {
-        Bitacora newBitacora = bitacoraService.crearBitacora(bitacora);
+    public ResponseEntity<?> crear(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("id_salon") Long idSalon,
+            @RequestParam("id_equipo") Long idEquipo,
+            @RequestParam("correo") String correo,
+            @RequestParam("fecha") String fecha,
+            @RequestParam("horaEntrada") String horaEntrada,
+            @RequestParam("horaSalida") String horaSalida,
+            @RequestParam("maestro") String maestro,
+            @RequestParam("grado") String grado,
+            @RequestParam("grupo") String grupo,
+            @RequestParam("observaciones") String observaciones
+    ) {
+        // Crea la bitácora con los datos recibidos
+        Bitacora newBitacora = bitacoraService.crearBitacora(idSalon, idEquipo, correo, fecha, horaEntrada, horaSalida, maestro, grado, grupo, observaciones, file);
         return ResponseEntity.status(201).body(Map.of(
                 "message", "Bitácora registrada con éxito",
                 "data", newBitacora,
                 "codigo", 201
         ));
     }
+
+
 
     @PutMapping("/bitacoras/{id}")
     public ResponseEntity<?> actualizar(@RequestBody Bitacora bitacora, @PathVariable Long id) {

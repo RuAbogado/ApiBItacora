@@ -2,6 +2,7 @@ package com.company.bitacora.backend.config;
 
 import com.company.bitacora.backend.filter.JwtReqFilter;
 import com.company.bitacora.backend.model.dao.UserDao;
+import jakarta.servlet.MultipartConfigElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -95,7 +96,7 @@ public class ConfigSecurity {
                 // Configuración de CORS para permitir solicitudes desde un origen específico
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:9090", "http://127.0.0.1:9090")); // Orígenes permitidos
+                    config.setAllowedOrigins(List.of("http://localhost:9090", "http://192.168.111.164:9090")); // Orígenes permitidos
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
                     config.setAllowCredentials(true); // Permite credenciales
                     config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With")); // Encabezados permitidos
@@ -123,5 +124,8 @@ public class ConfigSecurity {
         return NoOpPasswordEncoder.getInstance(); // Contraseñas sin encriptar
     }
 
-
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        return new MultipartConfigElement("");
+    }
 }

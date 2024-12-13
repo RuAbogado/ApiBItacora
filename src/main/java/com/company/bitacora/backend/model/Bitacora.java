@@ -1,5 +1,6 @@
 package com.company.bitacora.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class Bitacora implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecha;
     private LocalTime horaEntrada;
     private LocalTime horaSalida;
@@ -24,11 +26,11 @@ public class Bitacora implements Serializable {
     private byte[] foto;
     private String descripcion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "salon_id")
     private Salon salon;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "equipo_id")
     private Equipo equipo;
 
