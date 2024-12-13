@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BitacoraDao extends CrudRepository<Bitacora, Long> {
+    static void deleteByEquipoId(Long id) {
+    }
 }

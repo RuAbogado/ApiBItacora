@@ -19,13 +19,18 @@ public class Equipo {
     @Column(nullable = false, unique = true)
     private String numeroSerie;
 
+    @ManyToOne(fetch = FetchType.EAGER) // Relación Many-to-One con Salon
+    @JoinColumn(name = "salon_id", nullable = false) // Clave foránea que referencia a Salon
+    private Salon salon;
+
     public Equipo() {
     }
 
-    public Equipo(String marca, String modelo, String numeroSerie) {
+    public Equipo(String marca, String modelo, String numeroSerie, Salon salon) {
         this.marca = marca;
         this.modelo = modelo;
         this.numeroSerie = numeroSerie;
+        this.salon = salon;
     }
 
     public Long getId() {
@@ -58,5 +63,13 @@ public class Equipo {
 
     public void setNumeroSerie(String numeroSerie) {
         this.numeroSerie = numeroSerie;
+    }
+
+    public Salon getSalon() {
+        return salon;
+    }
+
+    public void setSalon(Salon salon) {
+        this.salon = salon;
     }
 }
