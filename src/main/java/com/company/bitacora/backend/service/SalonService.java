@@ -13,5 +13,5 @@ public interface SalonService {
 
     Salon updateSalon(Long id, Salon salon);
 
-    void deleteSalon(Long id);
+    boolean deleteSalon(Long id);
 }

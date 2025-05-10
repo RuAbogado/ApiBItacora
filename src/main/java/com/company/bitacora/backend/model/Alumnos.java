@@ -3,35 +3,26 @@ package com.company.bitacora.backend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Alunmos")
+@Table(name = "Alumnos")
 public class Alumnos {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(nullable = false, unique = true)
+    private String correo;
+
     private String Nombre;
     private String Apellido;
     private String Matricula;
-    private String Correo;
     private String contrasena;
 
     public Alumnos() {
-
     }
 
-    public Alumnos(String Nombre, String Apellido, String Matricula, String Correo, String contrasena) {
+    public Alumnos(String Nombre, String Apellido, String Matricula, String correo, String contrasena) {
         this.Nombre = Nombre;
         this.Apellido = Apellido;
         this.Matricula = Matricula;
-        this.Correo = Correo;
+        this.correo = correo;
         this.contrasena = contrasena;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNombre() {
@@ -59,11 +50,11 @@ public class Alumnos {
     }
 
     public String getCorreo() {
-        return Correo;
+        return correo;
     }
 
-    public void setCorreo(String Correo) {
-        this.Correo = Correo;
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public String getContrasena() {
@@ -73,5 +64,4 @@ public class Alumnos {
     public void setContrasena(String contrasena) {
         this.contrasena = contrasena;
     }
-
 }

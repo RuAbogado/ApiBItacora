@@ -40,8 +40,13 @@ public class EquipoServiceImpl implements EquipoService {
         return equipoDao.save(nuevoEquipo);
     }
 
+
     @Override
-    public void deleteEquipo(Long id) {
-        equipoDao.deleteById(id);
+    public boolean deleteEquipo(Long id) {
+        if(equipoDao.existsById(id)){
+            equipoDao.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

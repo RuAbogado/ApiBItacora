@@ -14,5 +14,5 @@ public interface SoporteTecnico_BitacoraService {
 
     SoporteTecnico_Bitacora actualizarBitacora(Long id, SoporteTecnico_Bitacora SoporteTecnico_Bitacora);
 
-    void eliminarBitacora(Long id);
+    boolean eliminarBitacora(Long id);
 }
